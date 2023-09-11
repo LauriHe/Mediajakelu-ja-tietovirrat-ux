@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'HammersmithOne';
+  src: url(./HammersmithOne-Regular.ttf);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bannerImage {
+  height: 40rem;
+  background-image: linear-gradient(to bottom, #ffffff00 60%, #1b1a20ff 100%), url('./banner.jpeg');
+  background-size: cover;
+  background-position: center center;
+}
+
+.filter {
+  background-image: linear-gradient(to bottom, #ffffff00 40%, rgba(27, 26, 32, 0.837) 100%);
+}
+
+.inverted-filter {
+  background-image: linear-gradient(to top, #ffffff00 10%, rgb(27, 26, 32) 100%);
+}

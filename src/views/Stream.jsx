@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import thumbnail from '../assets/images/thumbnail.jpeg';
 import { socket } from '../utils/socket';
 import ChatMessage from '../components/ChatMessage';
+import { useRef } from 'react';
+import VideoPlayer from './VideoPlayer';
 
 function Stream() {
   const [input, setInput] = useState('');
@@ -10,9 +11,41 @@ function Stream() {
   const [inputPlaceholder, setInputPlaceholder] = useState('Syötä nimimerkki');
   const [inputError, setInputError] = useState(false);
   const [desktopChat, setDesktopChat] = useState(false);
-  const desktopSize = 1100;
   const [videoHeight, setVideoHeight] = useState(0);
-  socket;
+  const desktopSize = 600;
+
+  const playerRef = useRef(null);
+
+  const videoJsOptions = {
+    autoplay: true,
+    muted: true,
+    controls: true,
+    responsive: true,
+    fluid: true,
+    loop: true,
+    liveui: true,
+    sources: [
+      {
+        src: './fuji.mp4',
+        type: 'video/mp4',
+        //src: 'http://195.148.104.124:1935/jakelu/ulla/playlist.m3u8',
+        //type: 'application/x-mpegURL',
+      },
+    ],
+  };
+
+  const handlePlayerReady = (player) => {
+    playerRef.current = player;
+
+    // You can handle player events here, for example:
+    player.on('waiting', () => {
+      console.log('player is waiting');
+    });
+
+    player.on('dispose', () => {
+      console.log('player will dispose');
+    });
+  };
 
   const handleInputChange = (event) => {
     setInput(event.target.value);
@@ -51,20 +84,18 @@ function Stream() {
   }, [socketConnected]);
 
   useEffect(() => {
-    const video = document.querySelector('img');
-    video.onload = () => {
+    const video = document.querySelector('video');
+    setVideoHeight(video.offsetHeight);
+    if (window.innerWidth > desktopSize) {
+      setDesktopChat(true);
+    }
+    onresize = () => {
       setVideoHeight(video.offsetHeight);
       if (window.innerWidth > desktopSize) {
         setDesktopChat(true);
+      } else {
+        setDesktopChat(false);
       }
-      onresize = () => {
-        setVideoHeight(video.offsetHeight);
-        if (window.innerWidth > desktopSize) {
-          setDesktopChat(true);
-        } else {
-          setDesktopChat(false);
-        }
-      };
     };
 
     socket.on('connect_error', (err) => {
@@ -90,8 +121,8 @@ function Stream() {
   return (
     <div className="bg-raisin-black-2 flex w-full h-full absolute top-0">
       <div className="w-full h-full flex items-center flex-col gap-2 pt-36 pb-8 overflow-hidden relative">
-        <div className="max-w-[90%] max-h-full z-10 relative">
-          <img className="w-full max-h-full rounded-md mb-32" src={thumbnail}></img>
+        <div className="w-[90%] video:w-[959px] h-full z-10 relative">
+          <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
           {!desktopSize && <div className="w-full h-32 absolute bottom-0 inverted-filter"></div>}
         </div>
         <div

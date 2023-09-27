@@ -7,7 +7,7 @@ import '../vjs-theme.css';
 export const VideoPlayer = (props) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
-  const { options, onReady } = props;
+  const { options } = props;
 
   useEffect(() => {
     // Make sure Video.js player is only initialized once
@@ -19,8 +19,13 @@ export const VideoPlayer = (props) => {
       videoRef.current.appendChild(videoElement);
 
       const player = (playerRef.current = videojs(videoElement, options, () => {
-        videojs.log('player is ready');
-        onReady && onReady(player);
+        player.on('waiting', () => {
+          videojs.log('player is waiting');
+        });
+
+        player.on('dispose', () => {
+          videojs.log('player will dispose');
+        });
       }));
       player.addClass('vjs-theme-city');
 
@@ -32,7 +37,7 @@ export const VideoPlayer = (props) => {
       player.autoplay(options.autoplay);
       player.src(options.sources);
     }
-  }, [options, videoRef, onReady]);
+  }, [options, videoRef]);
 
   // Dispose the Video.js player when the functional component unmounts
   useEffect(() => {
@@ -55,7 +60,6 @@ export const VideoPlayer = (props) => {
 
 VideoPlayer.propTypes = {
   options: PropTypes.object,
-  onReady: PropTypes.func,
 };
 
 export default VideoPlayer;

@@ -10,8 +10,8 @@ function App() {
       <Routes>
         <Route element={<Layout></Layout>}>
           <Route path="/" element={<Home></Home>} />
-          <Route path="/stream" element={<Stream></Stream>}></Route>
-          <Route path="/video" element={<VideoTest></VideoTest>}></Route>
+          <Route path="/stream" element={<Stream></Stream>} />
+          <Route path="/video" element={<VideoTest></VideoTest>} />
         </Route>
       </Routes>
     </Router>

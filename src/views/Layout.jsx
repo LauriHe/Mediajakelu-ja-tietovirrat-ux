@@ -17,24 +17,25 @@ function Layout() {
     setNaviMenuOpen(!naviMenuOpen);
   };
 
+  onresize = () => {
+    if (window.innerWidth > desktopSize) {
+      setDesktopNavi(true);
+    } else {
+      setDesktopNavi(false);
+      setNaviMenuOpen(false);
+    }
+  };
+
   useEffect(() => {
     if (window.innerWidth > desktopSize) {
       setDesktopNavi(true);
     }
-    onresize = () => {
-      if (window.innerWidth > desktopSize) {
-        setDesktopNavi(true);
-      } else {
-        setDesktopNavi(false);
-        setNaviMenuOpen(false);
-      }
-    };
   }, []);
 
   return (
     <>
       <nav className="w-full h-28 p-5 bg-raisin-black flex justify-between items-center relative z-50">
-        <div className="h-fit" onClick={navigateHome}>
+        <div className="h-fit cursor-pointer" onClick={navigateHome}>
           <h1 className="text-non-photo-blue font-HammersmithOne text-3xl">Film</h1>
           <h1 className="text-non-photo-blue font-HammersmithOne text-3xl">Festival</h1>
         </div>
